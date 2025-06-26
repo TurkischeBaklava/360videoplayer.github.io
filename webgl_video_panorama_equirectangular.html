@@ -225,10 +225,9 @@
 			const beta = eventData.beta;
 			const gamma = eventData.gamma;
 			
-			document.getElementById('alpha').textContent = alpha;
-			document.getElementById('beta').textContent = beta;
-			document.getElementById('gamma').textContent = gamma;
-			
+      document.getElementById('alpha').textContent = eventData.alpha ?? 'N/A';
+      document.getElementById('beta').textContent = eventData.beta ?? 'N/A';
+      document.getElementById('gamma').textContent = eventData.gamma ?? 'N/A';
 		}
 		
 		
