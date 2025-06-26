@@ -26,40 +26,7 @@
 		<span id="direction">Waiting for data...</span>
 	</div>
 	
-	
-	<script type="text/javascript">
-		
-		function requestOrientationPermission() {
-			
-			document.getElementById('debug').textContent = "requestOrientationPermission";
-			
-			if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
-				// (optional) Do something before API request prompt.
-				DeviceMotionEvent.requestPermission()
-				.then( response => {
-					// (optional) Do something after API prompt dismissed.
-					if ( response == "granted" ) {
-						window.addEventListener( "devicemotion",(e) => {
-							// do something with e
-						}, true)
-						
-						document.getElementById('debug').textContent = "granted";
-					}else{
-						document.getElementById('debug').textContent = "not granted";
-					}
-				})
-				.catch( console.error )
-			} else {
-				document.getElementById('debug').textContent = "DeviceMotionEvent is not defined";
-				alert( "DeviceMotionEvent is not defined" );
-			}
-			
-			
-		}
-		
-	</script>
-	
-	<button onclick='requestOrientationPermission();'>Request orientation permission</button>
+	<button id='request-orientation-button'>Request orientation permission</button>
 	
 </head>
 
@@ -137,6 +104,7 @@
 			
 			// event listener for play button
 			document.getElementById('play-button').addEventListener('click', onPlayButtonClicked);
+			document.getElementById('request-orientation-button').addEventListener('click', requestOrientationPermission);
 			
 			window.addEventListener( 'resize', onWindowResize );
 			
@@ -214,27 +182,27 @@
 			isUserInteracting = false;
 		}
 		
-		// function requestOrientationPermission() {
+		function requestOrientationPermission() {
 		
-		// 	document.getElementById('debug').textContent = "requestOrientationPermission";
+			document.getElementById('debug').textContent = "requestOrientationPermission";
 		
-		// 	if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
-		// 		// (optional) Do something before API request prompt.
-		// 		DeviceMotionEvent.requestPermission()
-		// 		.then( response => {
-		// 			// (optional) Do something after API prompt dismissed.
-		// 			if ( response == "granted" ) {
-		// 				window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true)
-		// 				document.getElementById('debug').textContent = "granted";
-		// 			}else{
-		// 				document.getElementById('debug').textContent = "not granted";
-		// 			}
-		// 		})
-		// 		.catch( console.error )
-		// 	} else {
-		// 		document.getElementById('debug').textContent = "DeviceMotionEvent is not defined";
-		// 		alert( "DeviceMotionEvent is not defined" );
-		// 	}
+			if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+				// (optional) Do something before API request prompt.
+				DeviceMotionEvent.requestPermission()
+				.then( response => {
+					// (optional) Do something after API prompt dismissed.
+					if ( response == "granted" ) {
+						window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true)
+						document.getElementById('debug').textContent = "granted";
+					}else{
+						document.getElementById('debug').textContent = "not granted";
+					}
+				})
+				.catch( console.error )
+			} else {
+				document.getElementById('debug').textContent = "DeviceMotionEvent is not defined";
+				alert( "DeviceMotionEvent is not defined" );
+			}
 		
 		
 		// }
