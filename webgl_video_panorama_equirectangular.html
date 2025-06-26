@@ -13,6 +13,54 @@
 	
 	<button id="play-button">Play</button>
 	
+	<div id="orientation-widget">
+		<strong>Orientation</strong><br>
+		Alpha: <span id="alpha">0</span><br>
+		Beta: <span id="beta">0</span><br>
+		Gamma: <span id="gamma">0</span><br>
+		Debug: <span id="debug"></span>
+	</div>
+	
+	<div id="direction-widget">
+		<strong>Direction</strong><br><br>
+		<span id="direction">Waiting for data...</span>
+	</div>
+	
+	
+	<script type="text/javascript">
+		
+		function requestOrientationPermission() {
+			
+			document.getElementById('debug').textContent = "requestOrientationPermission";
+			
+			if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+				// (optional) Do something before API request prompt.
+				DeviceMotionEvent.requestPermission()
+				.then( response => {
+					// (optional) Do something after API prompt dismissed.
+					if ( response == "granted" ) {
+						window.addEventListener( "devicemotion",(e) => {
+							// do something with e
+						}, true)
+						
+						document.getElementById('debug').textContent = "granted";
+					}else{
+						document.getElementById('debug').textContent = "not granted";
+					}
+				})
+				.catch( console.error )
+			} else {
+				document.getElementById('debug').textContent = "DeviceMotionEvent is not defined";
+				alert( "DeviceMotionEvent is not defined" );
+			}
+			
+			
+		}
+		
+	</script>
+	
+	<button onclick='requestOrientationPermission();'>Request orientation permission</button>
+	
 </head>
 
 
@@ -51,6 +99,9 @@
 		
 		const distance = .5;
 		
+		// const startButton = document.getElementById( 'startButton' );
+		// startButton.addEventListener( 'click', init );
+		
 		init();
 		
 		function init() {
@@ -84,8 +135,8 @@
 			document.addEventListener( 'pointerup', onPointerUp );
 			
 			
+			// event listener for play button
 			document.getElementById('play-button').addEventListener('click', onPlayButtonClicked);
-			
 			
 			window.addEventListener( 'resize', onWindowResize );
 			
@@ -161,6 +212,52 @@
 			}
 			
 			isUserInteracting = false;
+		}
+		
+		// function requestOrientationPermission() {
+		
+		// 	document.getElementById('debug').textContent = "requestOrientationPermission";
+		
+		// 	if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+		// 		// (optional) Do something before API request prompt.
+		// 		DeviceMotionEvent.requestPermission()
+		// 		.then( response => {
+		// 			// (optional) Do something after API prompt dismissed.
+		// 			if ( response == "granted" ) {
+		// 				window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true)
+		// 				document.getElementById('debug').textContent = "granted";
+		// 			}else{
+		// 				document.getElementById('debug').textContent = "not granted";
+		// 			}
+		// 		})
+		// 		.catch( console.error )
+		// 	} else {
+		// 		document.getElementById('debug').textContent = "DeviceMotionEvent is not defined";
+		// 		alert( "DeviceMotionEvent is not defined" );
+		// 	}
+		
+		
+		// }
+		
+		function onDeviceOrientationUpdate( eventData ){
+			
+			console.log("onDeviceOrientationUpdate");
+			
+			// var tiltX = Math.round(eventData.gamma * 2 );
+			// var tiltY =  Math.round(eventData.beta * 2);
+			
+			// console.log("tiltX: " + tiltX);			
+			// console.log("tiltY: " + tiltY);			
+			
+			
+			const alpha = eventData.alpha?.toFixed(1);
+			const beta = eventData.beta?.toFixed(1);
+			const gamma = eventData.gamma?.toFixed(1);
+			
+			document.getElementById('alpha').textContent = alpha;
+			document.getElementById('beta').textContent = beta;
+			document.getElementById('gamma').textContent = gamma;
+			
 		}
 		
 		
