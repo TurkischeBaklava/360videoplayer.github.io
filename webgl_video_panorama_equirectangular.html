@@ -183,9 +183,9 @@
 		}
 		
 		function requestOrientationPermission() {
-		
+			
 			document.getElementById('debug').textContent = "requestOrientationPermission";
-		
+			
 			if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
 				// (optional) Do something before API request prompt.
 				DeviceMotionEvent.requestPermission()
@@ -203,11 +203,14 @@
 				document.getElementById('debug').textContent = "DeviceMotionEvent is not defined";
 				alert( "DeviceMotionEvent is not defined" );
 			}
-		
-		
+			
+			
 		}
 		
 		function onDeviceOrientationUpdate( eventData ){
+			
+			
+			document.getElementById('debug').textContent = "onDeviceOrientationUpdate";
 			
 			console.log("onDeviceOrientationUpdate");
 			
