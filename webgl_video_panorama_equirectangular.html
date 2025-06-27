@@ -192,7 +192,7 @@
 				.then( response => {
 					// (optional) Do something after API prompt dismissed.
 					if ( response == "granted" ) {
-						window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true)
+						window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true);
 						document.getElementById('debug').textContent = "granted";
 					}else{
 						document.getElementById('debug').textContent = "not granted";
@@ -202,6 +202,10 @@
 			} else {
 				document.getElementById('debug').textContent = "DeviceMotionEvent is not defined";
 				alert( "DeviceMotionEvent is not defined" );
+
+				// If there is no request permission
+				window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true);
+
 			}
 			
 			
