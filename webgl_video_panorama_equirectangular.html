@@ -186,26 +186,31 @@
 			
 			document.getElementById('debug').textContent = "requestOrientationPermission";
 			
-			if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+			if ( typeof( DeviceOrientationEvent ) !== "undefined") {
 				// (optional) Do something before API request prompt.
-				DeviceMotionEvent.requestPermission()
-				.then( response => {
-					// (optional) Do something after API prompt dismissed.
-					if ( response == "granted" ) {
-						window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true);
-						document.getElementById('debug').textContent = "granted";
-					}else{
-						document.getElementById('debug').textContent = "not granted";
-					}
-				})
-				.catch( console.error )
+				
+				// Check if the requestPermission functions is defined for IOS devices
+				if(typeof( DeviceMotionEvent.requestPermission ) === "function" ){
+					DeviceMotionEvent.requestPermission()
+					.then( response => {
+						// (optional) Do something after API prompt dismissed.
+						if ( response == "granted" ) {
+							window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true);
+							document.getElementById('debug').textContent = "granted";
+						}else{
+							document.getElementById('debug').textContent = "not granted";
+						}
+					})
+					.catch( console.error )	
+				} else{
+					
+					// If there is no request permission, add the call back for android browsers
+					window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true);
+				}
+				
 			} else {
-				document.getElementById('debug').textContent = "DeviceMotionEvent is not defined";
-				alert( "DeviceMotionEvent is not defined" );
-
-				// If there is no request permission
-				window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true);
-
+				document.getElementById('debug').textContent = "DeviceOrientationEvent is not defined";
+				alert( "DeviceOrientationEvent is not defined" );
 			}
 			
 			
@@ -229,9 +234,9 @@
 			const beta = eventData.beta;
 			const gamma = eventData.gamma;
 			
-      document.getElementById('alpha').textContent = eventData.alpha ?? 'N/A';
-      document.getElementById('beta').textContent = eventData.beta ?? 'N/A';
-      document.getElementById('gamma').textContent = eventData.gamma ?? 'N/A';
+			document.getElementById('alpha').textContent = eventData.alpha ?? 'N/A';
+			document.getElementById('beta').textContent = eventData.beta ?? 'N/A';
+			document.getElementById('gamma').textContent = eventData.gamma ?? 'N/A';
 		}
 		
 		
