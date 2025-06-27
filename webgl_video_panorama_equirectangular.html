@@ -190,12 +190,12 @@
 				// (optional) Do something before API request prompt.
 				
 				// Check if the requestPermission functions is defined for IOS devices
-				if(typeof( DeviceMotionEvent.requestPermission ) === "function" ){
-					DeviceMotionEvent.requestPermission()
+				if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
+					DeviceOrientationEvent.requestPermission()
 					.then( response => {
 						// (optional) Do something after API prompt dismissed.
 						if ( response == "granted" ) {
-							window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true);
+							window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
 							document.getElementById('debug').textContent = "granted";
 						}else{
 							document.getElementById('debug').textContent = "not granted";
@@ -205,7 +205,7 @@
 				} else{
 					
 					// If there is no request permission, add the call back for android browsers
-					window.addEventListener( "devicemotion",onDeviceOrientationUpdate, true);
+					window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
 				}
 				
 			} else {
