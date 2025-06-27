@@ -25,9 +25,7 @@
 		<strong>Direction</strong><br><br>
 		<span id="direction">Waiting for data...</span>
 	</div>
-	
-	<button id='request-orientation-button'>Allow Orientation</button>
-	
+		
 </head>
 
 
@@ -104,7 +102,7 @@
 			
 			// event listener for play button
 			document.getElementById('play-button').addEventListener('click', onPlayButtonClicked);
-			document.getElementById('request-orientation-button').addEventListener('click', requestOrientationPermission);
+			// document.getElementById('request-orientation-button').addEventListener('click', requestOrientationPermission);
 			
 			window.addEventListener( 'resize', onWindowResize );
 			
@@ -161,10 +159,24 @@
 			camera.lookAt( 0, 0, 0 );
 			
 			renderer.render( scene, camera );
-			
 		}
 		
 		function onPlayButtonClicked() {
+			
+			
+			if ( typeof( DeviceOrientationEvent ) !== "undefined") {
+				// (optional) Do something before API request prompt.
+				requestOrientationPermission();
+				
+			} else {
+				
+				
+				document.getElementById('debug').textContent = "DeviceOrientationEvent is not defined";
+				alert( "DeviceOrientationEvent is not defined" );
+			}
+			
+			
+			
 			const video = document.getElementById('video');
 			const playButton = document.getElementById('play-button');
 			
@@ -186,33 +198,24 @@
 			
 			document.getElementById('debug').textContent = "requestOrientationPermission";
 			
-			if ( typeof( DeviceOrientationEvent ) !== "undefined") {
-				// (optional) Do something before API request prompt.
+			// Check if the requestPermission functions is defined for IOS devices
+			if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
+				DeviceOrientationEvent.requestPermission()
+				.then( response => {
+					// (optional) Do something after API prompt dismissed.
+					if ( response == "granted" ) {
+						window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
+						document.getElementById('debug').textContent = "granted";
+					}else{
+						document.getElementById('debug').textContent = "not granted";
+					}
+				})
+				.catch( console.error )	
+			} else{
 				
-				// Check if the requestPermission functions is defined for IOS devices
-				if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
-					DeviceOrientationEvent.requestPermission()
-					.then( response => {
-						// (optional) Do something after API prompt dismissed.
-						if ( response == "granted" ) {
-							window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-							document.getElementById('debug').textContent = "granted";
-						}else{
-							document.getElementById('debug').textContent = "not granted";
-						}
-					})
-					.catch( console.error )	
-				} else{
-					
-					// If there is no request permission, add the call back for android browsers
-					window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-				}
-				
-			} else {
-				document.getElementById('debug').textContent = "DeviceOrientationEvent is not defined";
-				alert( "DeviceOrientationEvent is not defined" );
+				// If there is no request permission, add the call back for android browsers
+				window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
 			}
-			
 			
 		}
 		
