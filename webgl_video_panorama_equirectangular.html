@@ -55,12 +55,17 @@
 		
 		let isUserInteracting = false,
 		isVideoPlaying = false,
+		isDeviceOrientationActive = false,
 		lon = 0, lat = 0,
 		phi = 0, theta = 0,
 		onPointerDownPointerX = 0,
 		onPointerDownPointerY = 0,
 		onPointerDownLon = 0,
 		onPointerDownLat = 0;
+
+		let alpha = 0,
+		beta = 0,
+		gamma = 0;
 		
 		const distance = .5;
 		
@@ -148,6 +153,12 @@
 		
 		function animate() {
 			
+
+			if(isDeviceOrientationActive){
+				lat = beta - 90;
+				lon = alpha;
+			}
+
 			lat = Math.max( - 85, Math.min( 85, lat ) );
 			phi = THREE.MathUtils.degToRad( 90 - lat );
 			theta = THREE.MathUtils.degToRad( lon );
@@ -156,6 +167,7 @@
 			camera.position.y = distance * Math.cos( phi );
 			camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
 			
+
 			camera.lookAt( 0, 0, 0 );
 			
 			renderer.render( scene, camera );
@@ -204,8 +216,10 @@
 				.then( response => {
 					// (optional) Do something after API prompt dismissed.
 					if ( response == "granted" ) {
-						window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
 						document.getElementById('debug').textContent = "granted";
+						isDeviceOrientationActive = true;
+
+						window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
 					}else{
 						document.getElementById('debug').textContent = "not granted";
 					}
@@ -213,8 +227,11 @@
 				.catch( console.error )	
 			} else{
 				
+				isDeviceOrientationActive = true;
+
 				// If there is no request permission, add the call back for android browsers
 				window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
+
 			}
 			
 		}
@@ -232,14 +249,13 @@
 			// console.log("tiltX: " + tiltX);			
 			// console.log("tiltY: " + tiltY);			
 			
-			
-			const alpha = eventData.alpha;
-			const beta = eventData.beta;
-			const gamma = eventData.gamma;
-			
 			document.getElementById('alpha').textContent = eventData.alpha ?? 'N/A';
 			document.getElementById('beta').textContent = eventData.beta ?? 'N/A';
 			document.getElementById('gamma').textContent = eventData.gamma ?? 'N/A';
+			
+			alpha = eventData.alpha;
+			beta = eventData.beta;
+			gamma = eventData.gamma;
 		}
 		
 		
