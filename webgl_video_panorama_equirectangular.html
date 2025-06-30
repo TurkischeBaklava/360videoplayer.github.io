@@ -154,12 +154,13 @@
 		function animate() {
 			
 			
-			camera.position.x = 0;
-			camera.position.y = 0;
-			camera.position.z = 0;
+			alpha = THREE.MathUtils.degToRad(event.alpha || 0); // Z
+			beta  = THREE.MathUtils.degToRad(event.beta  || 0); // X'
+			gamma = THREE.MathUtils.degToRad(event.gamma || 0); // Y''
 			
-			camera.quaternion.setFromEuler(new THREE.Euler(beta, gamma, alpha));
-
+			const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
+			camera.quaternion.setFromEuler(euler);
+			
 			
 			// lat = Math.max( - 85, Math.min( 85, lat ) );
 			// phi = THREE.MathUtils.degToRad( 90 - lat );
