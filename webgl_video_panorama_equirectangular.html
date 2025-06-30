@@ -154,19 +154,19 @@
 		function animate() {
 			
 			
-			const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
-			camera.quaternion.setFromEuler(euler);z
+			// const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
+			// camera.quaternion.setFromEuler(euler);z
 			
 			
-			// lat = Math.max( - 85, Math.min( 85, lat ) );
-			// phi = THREE.MathUtils.degToRad( 90 - lat );
-			// theta = THREE.MathUtils.degToRad( lon );
+			lat = Math.max( - 85, Math.min( 85, lat ) );
+			phi = THREE.MathUtils.degToRad( 90 - lat );
+			theta = THREE.MathUtils.degToRad( lon );
 			
-			// camera.position.x = distance * Math.sin( phi ) * Math.cos( theta );
-			// camera.position.y = distance * Math.cos( phi );
-			// camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
+			camera.position.x = distance * Math.sin( phi ) * Math.cos( theta );
+			camera.position.y = distance * Math.cos( phi );
+			camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
 			
-			// camera.lookAt( 0, 0, 0 );
+			camera.lookAt( 0, 0, 0 );
 			
 			
 			
