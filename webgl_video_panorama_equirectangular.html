@@ -25,7 +25,7 @@
 		<strong>Direction</strong><br><br>
 		<span id="direction">Waiting for data...</span>
 	</div>
-		
+	
 </head>
 
 
@@ -62,7 +62,7 @@
 		onPointerDownPointerY = 0,
 		onPointerDownLon = 0,
 		onPointerDownLat = 0;
-
+		
 		let alpha = 0,
 		beta = 0,
 		gamma = 0;
@@ -153,22 +153,25 @@
 		
 		function animate() {
 			
-
-			if(isDeviceOrientationActive){
-				lat = beta - 90;
-				lon = alpha;
-			}
-
-			lat = Math.max( - 85, Math.min( 85, lat ) );
-			phi = THREE.MathUtils.degToRad( 90 - lat );
-			theta = THREE.MathUtils.degToRad( lon );
 			
-			camera.position.x = distance * Math.sin( phi ) * Math.cos( theta );
-			camera.position.y = distance * Math.cos( phi );
-			camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
+			camera.position.x = 0;
+			camera.position.y = 0;
+			camera.position.z = 0;
 			
+			camera.quaternion.setFromEuler(new THREE.Euler(beta, gamma, alpha));
 
-			camera.lookAt( 0, 0, 0 );
+			
+			// lat = Math.max( - 85, Math.min( 85, lat ) );
+			// phi = THREE.MathUtils.degToRad( 90 - lat );
+			// theta = THREE.MathUtils.degToRad( lon );
+			
+			// camera.position.x = distance * Math.sin( phi ) * Math.cos( theta );
+			// camera.position.y = distance * Math.cos( phi );
+			// camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
+			
+			// camera.lookAt( 0, 0, 0 );
+			
+			
 			
 			renderer.render( scene, camera );
 		}
@@ -181,7 +184,6 @@
 				requestOrientationPermission();
 				
 			} else {
-				
 				
 				document.getElementById('debug').textContent = "DeviceOrientationEvent is not defined";
 				alert( "DeviceOrientationEvent is not defined" );
@@ -218,7 +220,7 @@
 					if ( response == "granted" ) {
 						document.getElementById('debug').textContent = "granted";
 						isDeviceOrientationActive = true;
-
+						
 						window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
 					}else{
 						document.getElementById('debug').textContent = "not granted";
@@ -227,11 +229,12 @@
 				.catch( console.error )	
 			} else{
 				
+				// Note: DeviceOrientationEvent is also defined Desktop browsers, so isDeviceOrientationActive should set to false for those are not mobile
 				isDeviceOrientationActive = true;
-
+				
 				// If there is no request permission, add the call back for android browsers
 				window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-
+				
 			}
 			
 		}
