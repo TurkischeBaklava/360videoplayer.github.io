@@ -154,12 +154,8 @@
 		function animate() {
 			
 			
-			alpha = THREE.MathUtils.degToRad(event.alpha || 0); // Z
-			beta  = THREE.MathUtils.degToRad(event.beta  || 0); // X'
-			gamma = THREE.MathUtils.degToRad(event.gamma || 0); // Y''
-			
 			const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
-			camera.quaternion.setFromEuler(euler);
+			camera.quaternion.setFromEuler(euler);z
 			
 			
 			// lat = Math.max( - 85, Math.min( 85, lat ) );
@@ -257,9 +253,10 @@
 			document.getElementById('beta').textContent = eventData.beta ?? 'N/A';
 			document.getElementById('gamma').textContent = eventData.gamma ?? 'N/A';
 			
-			alpha = eventData.alpha;
-			beta = eventData.beta;
-			gamma = eventData.gamma;
+			
+			alpha = THREE.MathUtils.degToRad(eventData.alpha || 0); // Z
+			beta  = THREE.MathUtils.degToRad(eventData.beta  || 0); // X'
+			gamma = THREE.MathUtils.degToRad(eventData.gamma || 0); // Y''
 		}
 		
 		
