@@ -238,25 +238,27 @@
 		
 		function onDeviceOrientationUpdate( eventData ){
 			
-			
-			document.getElementById('debug').textContent = "onDeviceOrientationUpdate";
-			
-			console.log("onDeviceOrientationUpdate");
-			
+
 			// var tiltX = Math.round(eventData.gamma * 2 );
 			// var tiltY =  Math.round(eventData.beta * 2);
 			
 			// console.log("tiltX: " + tiltX);			
 			// console.log("tiltY: " + tiltY);			
 			
-			document.getElementById('alpha').textContent = eventData.alpha ?? 'N/A';
-			document.getElementById('beta').textContent = eventData.beta ?? 'N/A';
-			document.getElementById('gamma').textContent = eventData.gamma ?? 'N/A';
-			
 			
 			alpha = THREE.MathUtils.degToRad(eventData.alpha || 0); // Z
 			beta  = THREE.MathUtils.degToRad(eventData.beta  || 0); // X'
 			gamma = THREE.MathUtils.degToRad(eventData.gamma || 0); // Y''
+
+			document.getElementById('alpha').textContent = alpha ?? 'N/A';
+			document.getElementById('beta').textContent = beta ?? 'N/A';
+			document.getElementById('gamma').textContent = gamma ?? 'N/A';
+
+						
+			document.getElementById('debug').textContent = "onDeviceOrientationUpdate";
+			
+			console.log("onDeviceOrientationUpdate");
+			
 		}
 		
 		
