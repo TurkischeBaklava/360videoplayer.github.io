@@ -177,7 +177,22 @@
 			
 			
 			
-			effect.render( scene, camera );
+			// renderer.render( scene, camera );
+
+
+			renderer.setScissorTest(true);
+
+			// LEFT EYE
+			renderer.setViewport(0, 0, window.innerWidth / 2, window.innerHeight);
+			renderer.setScissor(0, 0, window.innerWidth / 2, window.innerHeight);
+			renderer.render(scene, camera);
+
+			// RIGHT EYE
+			renderer.setViewport(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight);
+			renderer.setScissor(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight);
+			renderer.render(scene, camera);
+
+			renderer.setScissorTest(false);
 		}
 		
 		function onPlayButtonClicked() {
