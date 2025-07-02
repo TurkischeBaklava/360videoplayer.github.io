@@ -51,7 +51,10 @@
 		
 		import * as THREE from 'three';
 		
-		let camera, scene, renderer;
+		import { StereoEffect } from 'three/addons/effects/StereoEffect.js';
+		
+		
+		let camera, scene, renderer, effect;
 		
 		let isUserInteracting = false,
 		isVideoPlaying = false,
@@ -96,9 +99,13 @@
 			
 			renderer = new THREE.WebGLRenderer();
 			renderer.setPixelRatio( window.devicePixelRatio );
-			renderer.setSize( window.innerWidth, window.innerHeight );
+			// renderer.setSize( window.innerWidth, window.innerHeight );
 			renderer.setAnimationLoop( animate );
 			container.appendChild( renderer.domElement );
+			
+			effect = new StereoEffect( renderer );
+			effect.setSize( window.innerWidth, window.innerHeight );
+			
 			
 			document.addEventListener( 'pointerdown', onPointerDown );
 			document.addEventListener( 'pointermove', onPointerMove );
@@ -170,7 +177,7 @@
 			
 			
 			
-			renderer.render( scene, camera );
+			effect.render( scene, camera );
 		}
 		
 		function onPlayButtonClicked() {
@@ -238,7 +245,7 @@
 		
 		function onDeviceOrientationUpdate( eventData ){
 			
-
+			
 			// var tiltX = Math.round(eventData.gamma * 2 );
 			// var tiltY =  Math.round(eventData.beta * 2);
 			
@@ -249,12 +256,12 @@
 			alpha = THREE.MathUtils.degToRad(eventData.alpha || 0); // Z
 			beta  = THREE.MathUtils.degToRad(eventData.beta  || 0); // X'
 			gamma = THREE.MathUtils.degToRad(eventData.gamma || 0); // Y''
-
+			
 			document.getElementById('alpha').textContent = alpha ?? 'N/A';
 			document.getElementById('beta').textContent = beta ?? 'N/A';
 			document.getElementById('gamma').textContent = gamma ?? 'N/A';
-
-						
+			
+			
 			document.getElementById('debug').textContent = "onDeviceOrientationUpdate";
 			
 			console.log("onDeviceOrientationUpdate");
