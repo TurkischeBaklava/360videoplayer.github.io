@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "three-lens-distortion": "github:ycw/three-lens-distortion"
+  }
+}

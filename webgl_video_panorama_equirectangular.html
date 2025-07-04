@@ -11,6 +11,19 @@
 		}
 	</style>
 	
+</head>
+
+
+<body>
+	
+	<div id="container">
+		<input id="fullscreen" type="button" value="Full Screen" />
+	</div>
+	
+	<video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
+		<source src="https://aws-s3-plugin-test-baya.s3.eu-west-2.amazonaws.com/output_iphone.mp4">
+	</video>
+	
 	<button id="play-button">Play</button>
 	
 	<div id="orientation-widget">
@@ -26,17 +39,6 @@
 		<span id="direction">Waiting for data...</span>
 	</div>
 	
-</head>
-
-
-
-<body>
-	
-	<div id="container"></div>
-	
-	<video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
-		<source src="https://aws-s3-plugin-test-baya.s3.eu-west-2.amazonaws.com/output_iphone.mp4">
-	</video>
 	
 	<script type="importmap">
 		{
@@ -51,7 +53,6 @@
 		
 		import * as THREE from 'three';
 		
-		import { CardboardEffect } from 'three/addons/effects/CardboardEffect.js';
 		import { StereoEffect } from 'three/addons/effects/StereoEffect.js';
 		
 		
@@ -80,6 +81,7 @@
 		
 		function init() {
 			
+				
 			const container = document.getElementById( 'container' );
 			
 			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.25, 1000 );
@@ -109,8 +111,7 @@
 			effect = new StereoEffect( renderer );
 			effect.setSize( window.innerWidth, window.innerHeight );
 			effect.setEyeSeparation(3);
-			// effect.setEyeSeparation(2.0);
-			
+
 			
 			document.addEventListener( 'pointerdown', onPointerDown );
 			document.addEventListener( 'pointermove', onPointerMove );
@@ -120,6 +121,9 @@
 			// event listener for play button
 			document.getElementById('play-button').addEventListener('click', onPlayButtonClicked);
 			// document.getElementById('request-orientation-button').addEventListener('click', requestOrientationPermission);
+			
+			document.getElementById("fullscreen").addEventListener("click", toggleFullscreen);
+			
 			
 			window.addEventListener( 'resize', onWindowResize );
 			
@@ -204,9 +208,9 @@
 			// console.log("tiltY: " + tiltY);			
 			
 			
-			alpha = THREE.MathUtils.degToRad(eventData.alpha || 0); // Z
-			beta  = THREE.MathUtils.degToRad(eventData.beta  || 0); // X'
-			gamma = THREE.MathUtils.degToRad(eventData.gamma || 0); // Y''
+			alpha = eventData.alpha;
+			beta  = eventData.beta;
+			gamma = eventData.gamma;
 			
 			document.getElementById('alpha').textContent = alpha ?? 'N/A';
 			document.getElementById('beta').textContent = beta ?? 'N/A';
@@ -217,7 +221,6 @@
 			
 			console.log("onDeviceOrientationUpdate");
 		}
-		
 		
 		function animate() {
 			
@@ -287,23 +290,20 @@
 			// orientation_widget.style.display = 'none';
 			playButton.style.display = 'none';
 			direction_widget.style.display = 'none';
-
-			toggleFullscreen();
 		}
-		
 		
 		function toggleFullscreen() {
 			let elem = document.querySelector("canvas");
 			
 			console.log("toggleFullscreen");
-
+			
 			if (!document.fullscreenElement) {
 				elem.requestFullscreen().catch((err) => {
 					alert(
 					`Error attempting to enable fullscreen mode: ${err.message} (${err.name})`,
 					);
 					console.log("Error attempting to enable fullscreen mode");
-
+					
 				});
 			} else {
 				console.log("exitFullscreen");
@@ -313,4 +313,5 @@
 		
 	</script>
 </body>
+
 </html>
