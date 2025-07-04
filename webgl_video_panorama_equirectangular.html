@@ -83,13 +83,6 @@
 			const container = document.getElementById( 'container' );
 			
 			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.25, 1000 );
-			let f_len = camera.getFocalLength();
-			
-			// camera.setFocalLength(100);
-			// f_len = camera.getFocalLength();
-			
-			console.log( "Flen: " + f_len);
-
 
 			scene = new THREE.Scene();
 			
@@ -170,86 +163,6 @@
 			
 		}
 		
-		function animate() {
-			
-			
-			// const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
-			// camera.quaternion.setFromEuler(euler);z
-			
-			
-			lat = Math.max( - 85, Math.min( 85, lat ) );
-			phi = THREE.MathUtils.degToRad( 90 - lat );
-			theta = THREE.MathUtils.degToRad( lon );
-			
-			camera.position.x = distance * Math.sin( phi ) * Math.cos( theta );
-			camera.position.y = distance * Math.cos( phi );
-			camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
-			
-			camera.lookAt( 0, 0, 0 );
-			
-			
-			
-			effect.render( scene, camera );
-			
-			
-			// renderer.setScissorTest(true);
-			
-			
-			// // LEFT EYE
-			// renderer.setViewport(0, 0, window.innerWidth / 2, window.innerHeight);
-			// renderer.setScissor(0, 0, window.innerWidth / 2, window.innerHeight);
-			// renderer.render(scene, camera);
-			
-			// // RIGHT EYE
-			// renderer.setViewport(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight);
-			// renderer.setScissor(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight);
-			// renderer.render(scene, camera);
-			
-			// renderer.setScissorTest(false);
-		}
-		
-		function onPlayButtonClicked() {
-			
-			
-			if ( typeof( DeviceOrientationEvent ) !== "undefined") {
-				// (optional) Do something before API request prompt.
-				requestOrientationPermission();
-				
-			} else {
-				
-				document.getElementById('debug').textContent = "DeviceOrientationEvent is not defined";
-				alert( "DeviceOrientationEvent is not defined" );
-			}
-			
-			
-			
-			const video = document.getElementById('video');
-			const playButton = document.getElementById('play-button');
-			
-			isUserInteracting = true;
-			video.muted = false;
-			
-			if (video.paused) {
-				video.play();
-				playButton.innerText = 'Pause'; // Optional: change label
-			} else {
-				video.pause();
-				playButton.innerText = 'Play'; // Optional: change label
-			}
-			
-			isUserInteracting = false;
-			
-			
-
-			const orientation_widget = document.getElementById('orientation-widget');
-			const direction_widget = document.getElementById('direction-widget');
-
-			playButton.style.display = 'none';
-			orientation_widget.style.display = 'none';
-			direction_widget.style.display = 'none';
-			
-		}
-		
 		function requestOrientationPermission() {
 			
 			document.getElementById('debug').textContent = "requestOrientationPermission";
@@ -303,9 +216,79 @@
 			document.getElementById('debug').textContent = "onDeviceOrientationUpdate";
 			
 			console.log("onDeviceOrientationUpdate");
-			
 		}
 		
+
+		function animate() {
+			
+			// Camera movement with head orientation 
+
+
+
+
+
+			// Camera movement with pointer and finger movements
+
+			lat = Math.max( - 85, Math.min( 85, lat ) );
+			phi = THREE.MathUtils.degToRad( 90 - lat );
+			theta = THREE.MathUtils.degToRad( lon );
+			
+			camera.position.x = distance * Math.sin( phi ) * Math.cos( theta );
+			camera.position.y = distance * Math.cos( phi );
+			camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
+			
+			camera.lookAt( 0, 0, 0 );
+			
+			
+			
+			// Renders to screen with effect -stereo-
+			effect.render( scene, camera );
+
+			// Normal rendering for devices with no orientation
+			// renderer.render( scene, camera );
+		}
+		
+		function onPlayButtonClicked() {
+			
+			
+			if ( typeof( DeviceOrientationEvent ) !== "undefined") {
+				// (optional) Do something before API request prompt.
+				requestOrientationPermission();
+				
+			} else {
+				
+				document.getElementById('debug').textContent = "DeviceOrientationEvent is not defined";
+				alert( "DeviceOrientationEvent is not defined" );
+			}
+			
+			
+			
+			const video = document.getElementById('video');
+			const playButton = document.getElementById('play-button');
+			
+			isUserInteracting = true;
+			video.muted = false;
+			
+			if (video.paused) {
+				video.play();
+				playButton.innerText = 'Pause'; // Optional: change label
+			} else {
+				video.pause();
+				playButton.innerText = 'Play'; // Optional: change label
+			}
+			
+			isUserInteracting = false;
+			
+			
+
+			const orientation_widget = document.getElementById('orientation-widget');
+			const direction_widget = document.getElementById('direction-widget');
+
+			// orientation_widget.style.display = 'none';
+			playButton.style.display = 'none';
+			direction_widget.style.display = 'none';
+			
+		}
 		
 	</script>
 </body>
