@@ -289,21 +289,24 @@
 			direction_widget.style.display = 'none';
 
 			toggleFullscreen();
-			
 		}
 		
 		
 		function toggleFullscreen() {
 			let elem = document.querySelector("canvas");
 			
+			console.log("toggleFullscreen");
+
 			if (!document.fullscreenElement) {
 				elem.requestFullscreen().catch((err) => {
 					alert(
 					`Error attempting to enable fullscreen mode: ${err.message} (${err.name})`,
 					);
+					console.log("Error attempting to enable fullscreen mode");
+
 				});
 			} else {
-				document.getElementById('debug').textContent = "exitFullscreen";
+				console.log("exitFullscreen");
 				document.exitFullscreen();
 			}
 		}
