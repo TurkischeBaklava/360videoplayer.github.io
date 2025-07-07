@@ -34,7 +34,6 @@ class DeviceOrientationControls extends EventDispatcher {
 		this.object.rotation.reorder( 'YXZ' );
 		
 		this.enabled = true;
-		this.granted = false;
 		
 		this.deviceOrientation = {};
 		this.screenOrientation = 0;
@@ -91,7 +90,6 @@ class DeviceOrientationControls extends EventDispatcher {
 						
 						screen.orientation.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
 						window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
-						this.granted = true;
 					}
 					
 				} ).catch( function ( error ) {
@@ -104,7 +102,6 @@ class DeviceOrientationControls extends EventDispatcher {
 				
 				screen.orientation.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
 				window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
-				this.granted = true;
 			}
 			
 			scope.enabled = true;

@@ -163,8 +163,6 @@
 				controls = null;
 				console.log("DeviceOrientationControls disposed.");
 				renderer.setSize( window.innerWidth, window.innerHeight )
-				
-				
 			}else{
 				controls = new DeviceOrientationControls(camera);				
 			}
@@ -173,8 +171,7 @@
 		
 		function animate() {
 			
-			if (controls && controls.granted) {
-				
+			if (controls) {
 				console.log("Using Device Orientation Controls");
 				controls.update();
 				effect.render(scene, camera);
