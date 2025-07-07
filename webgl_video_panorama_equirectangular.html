@@ -18,7 +18,7 @@
 	
 	<div id="container">
 		<input id="fullscreen" type="button" value="Full Screen" />
-		<input id="allowdeviceorientation" type="button" value="Allow Device Orientation" />
+		<input id="allowdeviceorientation" type="button" value="Toggle VR" />
 	</div>
 	
 	<video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
@@ -26,20 +26,6 @@
 	</video>
 	
 	<button id="play-button">Play</button>
-	
-	<div id="orientation-widget">
-		<strong>Orientation</strong><br>
-		Alpha: <span id="alpha">0</span><br>
-		Beta: <span id="beta">0</span><br>
-		Gamma: <span id="gamma">0</span><br>
-		Debug: <span id="debug"></span>
-	</div>
-	
-	<div id="direction-widget">
-		<strong>Direction</strong><br><br>
-		<span id="direction">Waiting for data...</span>
-	</div>
-	
 	
 	<script type="importmap">
 		{
@@ -62,13 +48,14 @@
 		
 		let isUserInteracting = false,
 		isVideoPlaying = false,
-		isDeviceOrientationActive = false,
 		lon = 0, lat = 0,
 		phi = 0, theta = 0,
 		onPointerDownPointerX = 0,
 		onPointerDownPointerY = 0,
 		onPointerDownLon = 0,
-		onPointerDownLat = 0;
+		onPointerDownLat = 0,
+		hidePlayButtonTimeout;
+
 		
 		let alpha = 0,
 		beta = 0,
@@ -76,8 +63,6 @@
 		
 		const distance = .5;
 		
-		// const startButton = document.getElementById( 'startButton' );
-		// startButton.addEventListener( 'click', init );
 		
 		init();
 		
@@ -113,20 +98,20 @@
 			effect.setEyeSeparation(3);
 			
 			
+			window.addEventListener( 'resize', onWindowResize );
+			
+			
+			// event listener for pointer controls
 			document.addEventListener( 'pointerdown', onPointerDown );
 			document.addEventListener( 'pointermove', onPointerMove );
 			document.addEventListener( 'pointerup', onPointerUp );
 			
 			
-			// event listener for play button
+			// event listener for the buttons
 			document.getElementById('play-button').addEventListener('click', onPlayButtonClicked);
-			// document.getElementById('request-orientation-button').addEventListener('click', requestOrientationPermission);
-			
 			document.getElementById("fullscreen").addEventListener("click", toggleFullscreen);
-			document.getElementById("allowdeviceorientation").addEventListener("click", requestOrientationPermission);
+			document.getElementById("allowdeviceorientation").addEventListener("click", onRequestOrientationPermissionClick);
 			
-			
-			window.addEventListener( 'resize', onWindowResize );
 			
 		}
 		
@@ -149,6 +134,8 @@
 			onPointerDownLon = lon;
 			onPointerDownLat = lat;
 			
+			showPlayButtonTemporarily();
+			
 		}
 		
 		function onPointerMove( event ) {
@@ -157,7 +144,6 @@
 				
 				lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
 				lat = ( onPointerDownPointerY - event.clientY ) * 0.1 + onPointerDownLat;
-				
 			}
 			
 		}
@@ -168,85 +154,33 @@
 			
 		}
 		
-		function requestOrientationPermission() {
+		function onRequestOrientationPermissionClick() {
 			
-			console.log("requestOrientationPermission function");
+			console.log("onRequestOrientationPermissionClick");
 			
-			
-			const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-			
-			if(isMobile) {
-				isDeviceOrientationActive = true;
-				controls = new DeviceOrientationControls(camera);
+			if(controls){
+				controls.dispose();
+				controls = null;
+				console.log("DeviceOrientationControls disposed.");
+				renderer.setSize( window.innerWidth, window.innerHeight )
+				
+				
+			}else{
+				controls = new DeviceOrientationControls(camera);				
 			}
-			
-			// if ( isMobile && typeof( DeviceOrientationEvent ) !== "undefined") {
-			// 	// (optional) Do something before API request prompt.
-			
-			// 	// Check if the requestPermission functions is defined for IOS devices
-			// 	if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
-			// 		DeviceOrientationEvent.requestPermission()
-			// 		.then( response => {
-			// 			// (optional) Do something after API prompt dismissed.
-			// 			if ( response == "granted" ) {
-			// 				document.getElementById('debug').textContent = "granted";
-			// 				isDeviceOrientationActive = true;
-			// 				controls = new DeviceOrientationControls(camera);
-			
-			// 				window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-			// 			}else{
-			// 				document.getElementById('debug').textContent = "not granted";
-			// 			}
-			// 		})
-			// 		.catch( console.error )	
-			// 	} else{
-			
-			// 		// Note: DeviceOrientationEvent is also defined Desktop browsers, so isDeviceOrientationActive should set to false for those are not mobile
-			// 		isDeviceOrientationActive = true;
-			
-			// 		// If there is no request permission, add the call back for android browsers
-			// 		window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-			
-			// 		controls = new DeviceOrientationControls(camera);
-			
-			// 	}
-			
-			// } else {
-			// 	console.log("DeviceOrientationEvent is not defined");
-			// }
-			
 		}
 		
-		function onDeviceOrientationUpdate( eventData ){
-			
-			
-			// var tiltX = Math.round(eventData.gamma * 2 );
-			// var tiltY =  Math.round(eventData.beta * 2);
-			
-			// console.log("tiltX: " + tiltX);			
-			// console.log("tiltY: " + tiltY);			
-			
-			
-			alpha = eventData.alpha;
-			beta  = eventData.beta;
-			gamma = eventData.gamma;
-			
-			document.getElementById('alpha').textContent = alpha ?? 'N/A';
-			document.getElementById('beta').textContent = beta ?? 'N/A';
-			document.getElementById('gamma').textContent = gamma ?? 'N/A';
-			
-			
-			document.getElementById('debug').textContent = "onDeviceOrientationUpdate";
-			
-			console.log("onDeviceOrientationUpdate");
-		}
 		
 		function animate() {
-			if (isDeviceOrientationActive) {
+			
+			if (controls && controls.granted) {
+				
 				console.log("Using Device Orientation Controls");
 				controls.update();
 				effect.render(scene, camera);
+				
 			} else {
+				
 				console.log("Using Pointer Controls");
 				lat = Math.max(-85, Math.min(85, lat));
 				phi = THREE.MathUtils.degToRad(90 - lat);
@@ -279,19 +213,26 @@
 				playButton.innerText = 'Play'; // Optional: change label
 			}
 			
-			isUserInteracting = false;
+			isUserInteracting = false;	
+		}
+		
+		function showPlayButtonTemporarily() {
+			const playButton = document.getElementById("play-button");
 			
+			// Show the button
+			playButton.style.display = "block";
 			
+			// Clear any existing timer
+			clearTimeout(hidePlayButtonTimeout);
 			
-			const orientation_widget = document.getElementById('orientation-widget');
-			const direction_widget = document.getElementById('direction-widget');
-			
-			// orientation_widget.style.display = 'none';
-			playButton.style.display = 'none';
-			direction_widget.style.display = 'none';
+			// Set a new timer to hide after 3 seconds
+			hidePlayButtonTimeout = setTimeout(() => {
+				playButton.style.display = "none";
+			}, 3000); // 3000ms = 3 seconds
 		}
 		
 		function toggleFullscreen() {
+			
 			let elem = document.querySelector("canvas");
 			
 			console.log("toggleFullscreen");
