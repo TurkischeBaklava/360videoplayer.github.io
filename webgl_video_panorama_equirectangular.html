@@ -126,6 +126,17 @@
 			
 			
 			window.addEventListener( 'resize', onWindowResize );
+
+			
+			const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+			if ( isMobile && typeof( DeviceOrientationEvent ) !== "undefined") {
+				// (optional) Do something before API request prompt.
+				requestOrientationPermission();
+				
+			} else {
+				console.log("DeviceOrientationEvent is not defined");
+			}
 			
 		}
 		
@@ -169,8 +180,8 @@
 		
 		function requestOrientationPermission() {
 			
-			document.getElementById('debug').textContent = "requestOrientationPermission";
-			
+			console.log("requestOrientationPermission function");
+
 			// Check if the requestPermission functions is defined for IOS devices
 			if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
 				DeviceOrientationEvent.requestPermission()
@@ -243,28 +254,17 @@
 			camera.lookAt( 0, 0, 0 );
 			
 			
-			
-			// Renders to screen with effect -stereo-
-			effect.render( scene, camera );
-			
-			// Normal rendering for devices with no orientation
-			// renderer.render( scene, camera );
+			if(isDeviceOrientationActive){
+				// Renders to screen with effect -stereo-
+				effect.render( scene, camera );
+			}
+			else{
+				// Normal rendering for devices with no orientation
+				renderer.render( scene, camera );
+			}
 		}
 		
 		function onPlayButtonClicked() {
-			
-			
-			if ( typeof( DeviceOrientationEvent ) !== "undefined") {
-				// (optional) Do something before API request prompt.
-				requestOrientationPermission();
-				
-			} else {
-				
-				document.getElementById('debug').textContent = "DeviceOrientationEvent is not defined";
-				alert( "DeviceOrientationEvent is not defined" );
-			}
-			
-			
 			
 			const video = document.getElementById('video');
 			const playButton = document.getElementById('play-button');
