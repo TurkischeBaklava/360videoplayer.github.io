@@ -175,40 +175,45 @@
 			
 			const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 			
-			if ( isMobile && typeof( DeviceOrientationEvent ) !== "undefined") {
-				// (optional) Do something before API request prompt.
-				
-				// Check if the requestPermission functions is defined for IOS devices
-				if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
-					DeviceOrientationEvent.requestPermission()
-					.then( response => {
-						// (optional) Do something after API prompt dismissed.
-						if ( response == "granted" ) {
-							document.getElementById('debug').textContent = "granted";
-							isDeviceOrientationActive = true;
-							controls = new DeviceOrientationControls(camera);
-							
-							window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-						}else{
-							document.getElementById('debug').textContent = "not granted";
-						}
-					})
-					.catch( console.error )	
-				} else{
-					
-					// Note: DeviceOrientationEvent is also defined Desktop browsers, so isDeviceOrientationActive should set to false for those are not mobile
-					isDeviceOrientationActive = true;
-					
-					// If there is no request permission, add the call back for android browsers
-					window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-					
-					controls = new DeviceOrientationControls(camera);
-					
-				}
-				
-			} else {
-				console.log("DeviceOrientationEvent is not defined");
+			if(isMobile) {
+				isDeviceOrientationActive = true;
+				controls = new DeviceOrientationControls(camera);
 			}
+			
+			// if ( isMobile && typeof( DeviceOrientationEvent ) !== "undefined") {
+			// 	// (optional) Do something before API request prompt.
+				
+			// 	// Check if the requestPermission functions is defined for IOS devices
+			// 	if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
+			// 		DeviceOrientationEvent.requestPermission()
+			// 		.then( response => {
+			// 			// (optional) Do something after API prompt dismissed.
+			// 			if ( response == "granted" ) {
+			// 				document.getElementById('debug').textContent = "granted";
+			// 				isDeviceOrientationActive = true;
+			// 				controls = new DeviceOrientationControls(camera);
+							
+			// 				window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
+			// 			}else{
+			// 				document.getElementById('debug').textContent = "not granted";
+			// 			}
+			// 		})
+			// 		.catch( console.error )	
+			// 	} else{
+					
+			// 		// Note: DeviceOrientationEvent is also defined Desktop browsers, so isDeviceOrientationActive should set to false for those are not mobile
+			// 		isDeviceOrientationActive = true;
+					
+			// 		// If there is no request permission, add the call back for android browsers
+			// 		window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
+					
+			// 		controls = new DeviceOrientationControls(camera);
+					
+			// 	}
+				
+			// } else {
+			// 	console.log("DeviceOrientationEvent is not defined");
+			// }
 			
 		}
 		
@@ -240,8 +245,8 @@
 			
 			
 			if(isDeviceOrientationActive){
-  				controls.update();
-
+				controls.update();
+				
 				// Camera movement with head orientation 
 				// Renders to screen with effect -stereo-
 				effect.render( scene, camera );
