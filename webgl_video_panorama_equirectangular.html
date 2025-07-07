@@ -182,7 +182,7 @@
 			
 			// if ( isMobile && typeof( DeviceOrientationEvent ) !== "undefined") {
 			// 	// (optional) Do something before API request prompt.
-				
+			
 			// 	// Check if the requestPermission functions is defined for IOS devices
 			// 	if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
 			// 		DeviceOrientationEvent.requestPermission()
@@ -192,7 +192,7 @@
 			// 				document.getElementById('debug').textContent = "granted";
 			// 				isDeviceOrientationActive = true;
 			// 				controls = new DeviceOrientationControls(camera);
-							
+			
 			// 				window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
 			// 			}else{
 			// 				document.getElementById('debug').textContent = "not granted";
@@ -200,17 +200,17 @@
 			// 		})
 			// 		.catch( console.error )	
 			// 	} else{
-					
+			
 			// 		// Note: DeviceOrientationEvent is also defined Desktop browsers, so isDeviceOrientationActive should set to false for those are not mobile
 			// 		isDeviceOrientationActive = true;
-					
+			
 			// 		// If there is no request permission, add the call back for android browsers
 			// 		window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-					
+			
 			// 		controls = new DeviceOrientationControls(camera);
-					
+			
 			// 	}
-				
+			
 			// } else {
 			// 	console.log("DeviceOrientationEvent is not defined");
 			// }
@@ -242,34 +242,26 @@
 		}
 		
 		function animate() {
-			
-			
-			if(isDeviceOrientationActive){
+			if (isDeviceOrientationActive) {
+				console.log("Using Device Orientation Controls");
 				controls.update();
+				effect.render(scene, camera);
+			} else {
+				console.log("Using Pointer Controls");
+				lat = Math.max(-85, Math.min(85, lat));
+				phi = THREE.MathUtils.degToRad(90 - lat);
+				theta = THREE.MathUtils.degToRad(lon);
 				
-				// Camera movement with head orientation 
-				// Renders to screen with effect -stereo-
-				effect.render( scene, camera );
-			}
-			else{
+				camera.position.x = distance * Math.sin(phi) * Math.cos(theta);
+				camera.position.y = distance * Math.cos(phi);
+				camera.position.z = distance * Math.sin(phi) * Math.sin(theta);
 				
-				// Camera movement with pointer and finger movements
+				camera.lookAt(0, 0, 0);
 				
-				lat = Math.max( - 85, Math.min( 85, lat ) );
-				phi = THREE.MathUtils.degToRad( 90 - lat );
-				theta = THREE.MathUtils.degToRad( lon );
-				
-				camera.position.x = distance * Math.sin( phi ) * Math.cos( theta );
-				camera.position.y = distance * Math.cos( phi );
-				camera.position.z = distance * Math.sin( phi ) * Math.sin( theta );
-				
-				camera.lookAt( 0, 0, 0 );
-				
-				// Normal rendering for devices with no orientation
-				renderer.render( scene, camera );
-				
+				renderer.render(scene, camera);
 			}
 		}
+		
 		
 		function onPlayButtonClicked() {
 			
