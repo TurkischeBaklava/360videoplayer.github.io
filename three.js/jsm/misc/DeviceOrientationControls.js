@@ -52,12 +52,6 @@ class DeviceOrientationControls extends EventDispatcher {
 			
 		};
 		
-		// const onScreenOrientationChangeEvent = function () {
-		// 	const orientation = screen.orientation || {};
-		// 	scope.screenOrientation = orientation.angle !== undefined ? orientation.angle : (window.orientation || 0);
-		// };
-		
-		
 		// The angles alpha, beta and gamma form a set of intrinsic Tait-Bryan angles of type Z-X'-Y''
 		
 		const setObjectQuaternion = function (quaternion, alpha, beta, gamma, orient) {
@@ -94,7 +88,7 @@ class DeviceOrientationControls extends EventDispatcher {
 					
 					if ( response == 'granted' ) {
 						
-						window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
+						screen.orientation.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
 						window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
 						
 					}
@@ -107,7 +101,7 @@ class DeviceOrientationControls extends EventDispatcher {
 				
 			} else {
 				
-				window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
+				screen.orientation.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
 				window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
 				
 			}
@@ -118,7 +112,7 @@ class DeviceOrientationControls extends EventDispatcher {
 		
 		this.disconnect = function () {
 			
-			window.removeEventListener( 'orientationchange', onScreenOrientationChangeEvent );
+			screen.orientation.removeEventListener( 'orientationchange', onScreenOrientationChangeEvent );
 			window.removeEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
 			
 			scope.enabled = false;
