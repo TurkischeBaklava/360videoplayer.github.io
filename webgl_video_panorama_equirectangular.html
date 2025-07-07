@@ -18,6 +18,7 @@
 	
 	<div id="container">
 		<input id="fullscreen" type="button" value="Full Screen" />
+		<input id="allowdeviceorientation" type="button" value="Allow Device Orientation" />
 	</div>
 	
 	<video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
@@ -81,7 +82,7 @@
 		
 		function init() {
 			
-				
+			
 			const container = document.getElementById( 'container' );
 			
 			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.25, 1000 );
@@ -111,7 +112,7 @@
 			effect = new StereoEffect( renderer );
 			effect.setSize( window.innerWidth, window.innerHeight );
 			effect.setEyeSeparation(3);
-
+			
 			
 			document.addEventListener( 'pointerdown', onPointerDown );
 			document.addEventListener( 'pointermove', onPointerMove );
@@ -123,20 +124,10 @@
 			// document.getElementById('request-orientation-button').addEventListener('click', requestOrientationPermission);
 			
 			document.getElementById("fullscreen").addEventListener("click", toggleFullscreen);
+			document.getElementById("allowdeviceorientation").addEventListener("click", requestOrientationPermission);
 			
 			
 			window.addEventListener( 'resize', onWindowResize );
-
-			
-			const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
-			if ( isMobile && typeof( DeviceOrientationEvent ) !== "undefined") {
-				// (optional) Do something before API request prompt.
-				requestOrientationPermission();
-				
-			} else {
-				console.log("DeviceOrientationEvent is not defined");
-			}
 			
 		}
 		
@@ -181,30 +172,40 @@
 		function requestOrientationPermission() {
 			
 			console.log("requestOrientationPermission function");
-
-			// Check if the requestPermission functions is defined for IOS devices
-			if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
-				DeviceOrientationEvent.requestPermission()
-				.then( response => {
-					// (optional) Do something after API prompt dismissed.
-					if ( response == "granted" ) {
-						document.getElementById('debug').textContent = "granted";
-						isDeviceOrientationActive = true;
-						
-						window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-					}else{
-						document.getElementById('debug').textContent = "not granted";
-					}
-				})
-				.catch( console.error )	
-			} else{
+			
+			
+			const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+			
+			if ( isMobile && typeof( DeviceOrientationEvent ) !== "undefined") {
+				// (optional) Do something before API request prompt.
 				
-				// Note: DeviceOrientationEvent is also defined Desktop browsers, so isDeviceOrientationActive should set to false for those are not mobile
-				isDeviceOrientationActive = true;
+				// Check if the requestPermission functions is defined for IOS devices
+				if(typeof( DeviceOrientationEvent.requestPermission ) === "function" ){
+					DeviceOrientationEvent.requestPermission()
+					.then( response => {
+						// (optional) Do something after API prompt dismissed.
+						if ( response == "granted" ) {
+							document.getElementById('debug').textContent = "granted";
+							isDeviceOrientationActive = true;
+							
+							window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
+						}else{
+							document.getElementById('debug').textContent = "not granted";
+						}
+					})
+					.catch( console.error )	
+				} else{
+					
+					// Note: DeviceOrientationEvent is also defined Desktop browsers, so isDeviceOrientationActive should set to false for those are not mobile
+					isDeviceOrientationActive = true;
+					
+					// If there is no request permission, add the call back for android browsers
+					window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
+					
+				}
 				
-				// If there is no request permission, add the call back for android browsers
-				window.addEventListener( 'deviceorientation',onDeviceOrientationUpdate, true);
-				
+			} else {
+				console.log("DeviceOrientationEvent is not defined");
 			}
 			
 		}
